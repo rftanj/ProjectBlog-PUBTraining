@@ -1,0 +1,209 @@
+﻿@using ProjectBlog.Models;
+@model PaginationHelper<Blog>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Digital Trend - Blog Detail</title>
+    <!--
+
+    DIGITAL TREND
+
+    https://templatemo.com/tm-538-digital-trend
+
+    -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="~/jscssuser/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/jscssuser/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/jscssuser/css/aos.css">
+    <link rel="stylesheet" href="~/jscssuser/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/jscssuser/css/owl.theme.default.min.css">
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="~/jscssuser/css/templatemo-digital-trend.css">
+
+</head>
+<body>
+
+    <!-- MENU BAR -->
+    <nav class="navbar navbar-expand-lg position-relative">
+        <div class="container">
+            <a class="navbar-brand" href="/User/BlogContent">
+                Our Blog
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link contact" style="cursor:pointer" onclick="function Logout() { document.getElementById('idformLogout').submit(); } Logout();">
+                            <i class="ni ni-single-02 text-blue"></i>
+                            <span class="nav-link-text">Logout</span>
+                        </a>
+                        <form action="/Account/Logout" method="post" id="idformLogout">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    @foreach (var get in Model)
+    {
+        <section class="project-detail section-padding-half">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 mx-auto col-md-10 col-12 mt-lg-5 text-center" data-aos="fade-up">
+                        <h4 class="blog-category text-info">@get.Author</h4>
+
+                        <h1>@get.Title</h1>
+
+                        <div class="client-info">
+                            <div class="d-flex justify-content-center align-items-center mt-3">
+                                <p>@get.CreatedDate.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        @if (string.IsNullOrEmpty(get.Picture))
+        {
+            <div class="full-image text-center" data-aos="zoom-in">
+                <img src="/uploads/img/Pasim.jpg" class="img-fluid" alt="blog header">
+            </div>
+        }
+        else
+        {
+            <div class="full-image text-center" data-aos="zoom-in">
+                <img src="/uploads/img/@get.Picture" class="img-fluid" alt="blog header">
+            </div>
+        }
+
+
+        <!-- BLOG DETAIL -->
+        <section class="project-detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 mx-auto col-md-11 col-12 my-5 pt-3" data-aos="fade-up">
+                        <p>
+                            @if(get.Content.Length > 500)
+                            {
+                                var Text = $"{get.Content.Substring(0, 500)} ...";
+                                <p>@Text</p>
+                            }
+                            else
+                            {
+                                <p>@get.Content</p>
+                            }
+                        </p>
+                        <div class="class="col-lg-9 mx-auto col-md-10 col-12 mt-lg-5 text-center" data-aos="fade-up">
+                            <a href="@Url.Action("DetailBlog", new { Id = get.Id})" class="text-danger">Read More...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+    @{
+        var prevDisabled =
+            !Model.HasPrevPage ? "disabled" : "";
+        var nextDisabled =
+            !Model.HasNextPage ? "disabled" : "";
+
+    }
+
+
+    <section class="project-detail section-padding-half">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 mx-auto col-md-10 col-12 mt-lg-5 text-center" data-aos="fade-up">
+                    <div>
+                        <a asp-action="Index" style="float:right;"
+                           asp-route-pageNumber="@(Model.PageIndex +1)"
+                           class="btn btn-sm btn-primary  @nextDisabled ">
+                            Next
+                        </a>
+                    </div>
+                    <div>
+                        <a asp-action="Index" style="float:right"
+                           asp-route-pageNumber="@(Model.PageIndex -1)"
+                           class="btn btn-sm btn-primary @prevDisabled">
+                            Previous
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-5 mx-lg-auto col-md-8 col-10">
+                    <h1 class="text-white" data-aos="fade-up" data-aos-delay="100"> This is My <strong> UTS </strong> Only.</h1>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="my-4">Contact Info</h4>
+
+                    <p class="mb-1">
+                        <i class="fa fa-phone mr-2 footer-icon"></i>
+                        +62 822 915 735 7x
+                    </p>
+
+                    <p>
+                        <a href="http://gmail.com">
+                            <i class="fa fa-envelope mr-2 footer-icon"></i>
+                            mrfata107@gmail.com
+                        </a>
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12" data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="my-4">Our Campus</h4>
+
+                    <p class="mb-1">
+                        <i class="fa fa-home mr-2 footer-icon"></i>
+                       Pasim Of University, Dakota 8A, Sukaraja, Cicendo, Bandung City, West Java, Indonesia
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mx-lg-auto text-center col-md-8 col-12" data-aos="fade-up" data-aos-delay="400">
+                    <p class="copyright-text">
+                        Copyright &copy; 2020 Your Company
+                        <br>
+                        <a rel="nofollow noopener" href="https://templatemo.com">Design: TemplateMo</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- SCRIPTS -->
+    <script src="~/jscssuser/js/jquery.min.js"></script>
+    <script src="~/jscssuser/js/bootstrap.min.js"></script>
+    <script src="~/jscssuser/js/aos.js"></script>
+    <script src="~/jscssuser/js/owl.carousel.min.js"></script>
+    <script src="~/jscssuser/js/custom.js"></script>
+
+</body>
+</html>

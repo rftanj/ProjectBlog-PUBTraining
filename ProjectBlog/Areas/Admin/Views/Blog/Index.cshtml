@@ -1,0 +1,77 @@
+﻿@model PaginationHelper<Blog>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col text-right">
+    <a href="@Url.Action("AddBlog", "Blog")" class="btn btn-primary mb-3">
+        Add Data
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Picture</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Created Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var getBlog in Model)
+            {
+                <tr>
+                    <td>@getBlog.Id</td>
+                    <td><img src="/uploads/img/@getBlog.Picture" width="30"></td>
+                    <td>@getBlog.Title</td>
+                    <td>@getBlog.Author</td>
+                    <td>@getBlog.CreatedDate.ToString("dd/MM/yyyy")</td>
+                    <td>@getBlog.Status</td>
+                    <td>
+                        <a href="@Url.Action("UpdateBlog", "Blog", new { id = getBlog.Id })" class="btn btn-sm btn-info">Update</a>
+                        <input type="button" class="btn btn-sm btn-danger" value="Delete" onclick="deleteData(@getBlog.Id)" />
+                    </td>
+                </tr>
+            }
+        </table>
+        @{
+            var prevDisabled =
+                !Model.HasPrevPage ? "disabled" : "";
+            var nextDisabled =
+                !Model.HasNextPage ? "disabled" : "";
+
+        }
+
+
+        <a asp-action="Index" style="float:right"
+           asp-route-pageNumber="@(Model.PageIndex +1)"
+           class="btn btn-sm btn-default  @nextDisabled ">
+            >>
+        </a>
+        <a asp-action="Index" style="float:right"
+           asp-route-pageNumber="@(Model.PageIndex -1)"
+           class="btn btn-sm btn-default @prevDisabled">
+            <<
+        </a>
+        <form action="@Url.Action("DeleteBlog", "Blog")" method="post" id="DeleteBlog">
+            <input type="text" name="Id" id="CekDelete" style="display:none">
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function deleteData(Del) {
+
+            if (window.confirm("Delete This Data?")) {
+                document.getElementById("CekDelete").value = Del;
+                document.getElementById("DeleteBlog").submit();
+            }
+
+        }
+    </script>
+}

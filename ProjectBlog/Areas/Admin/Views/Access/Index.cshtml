@@ -1,0 +1,78 @@
+﻿@model PaginationHelper<Access>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col text-right">
+    <a href="@Url.Action("AddAccess", "Access")" class="btn btn-primary mb-3">
+        Add Data
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            @foreach (var getAccess in Model)
+            {
+            <tbody>
+                <tr>
+                    <td>@getAccess.Id</td>
+                    <td>@getAccess.Username</td>
+                    <td>@getAccess.Name</td>
+                    <td>@getAccess.Password</td>
+                    <td>@getAccess.RoleName</td>
+                    <td>
+                        <a href="@Url.Action("UpdateAccess", "Access", new { id = getAccess.Id })" class="btn btn-sm btn-info">Update</a>
+                        <input type="button" class="btn btn-sm btn-danger" value="Delete" onclick="deleteData(@getAccess.Id)" />
+                    </td>
+                </tr>
+            </tbody>
+            }
+        </table>
+        @{
+            var prevDisabled =
+                !Model.HasPrevPage ? "disabled" : "";
+            var nextDisabled =
+                !Model.HasNextPage ? "disabled" : "";
+
+        }
+
+        <a asp-action="Index" style="float:right"
+           asp-route-pageNumber="@(Model.PageIndex +1)"
+           class="btn btn-sm btn-default  @nextDisabled ">
+            >>
+        </a>
+        <a asp-action="Index" style="float:right"
+           asp-route-pageNumber="@(Model.PageIndex -1)"
+           class="btn btn-sm btn-default @prevDisabled">
+            <<
+        </a>
+        <form action="@Url.Action("DeleteAccess", "Access")" method="post" id="DeleteAccess">
+            <input type="text" name="Id" id="CekDelete" style="display:none">
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function deleteData(Del) {
+
+            if (window.confirm("Delete This Data?")) {
+                document.getElementById("CekDelete").value = Del;
+                document.getElementById("DeleteAccess").submit();
+            }
+        }
+
+    </script>
+}
